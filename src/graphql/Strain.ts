@@ -15,7 +15,7 @@ export const StrainQuery = extendType({
     definition(t) {
         t.nonNull.list.nonNull.field("allStrains", {
             type: "Strain",
-            resolve() {
+            resolve(parent, args, context) {
                 return context.prisma.strain.findMany();
             },
         });
@@ -24,7 +24,7 @@ export const StrainQuery = extendType({
             args: {
                 type: nonNull(stringArg()),
             },
-            resolve(parent, args) {
+            resolve(parent, args, context) {
                 return context.prisma.strain.findMany({
                     where: {
                         type: args.type
@@ -45,7 +45,7 @@ export const StrainMutation = extendType({
                 type: nonNull(stringArg()),
             },
             
-            resolve(parent, args) {
+            resolve(parent, args, context) {
                 return context.prisma.strain.create({
                     data: {
                         name: args.name,
