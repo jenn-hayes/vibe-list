@@ -1,9 +1,9 @@
 import { ApolloServer } from "apollo-server";
-
-// 1
+import { context } from "./context";
 import { schema } from "./schema";
 export const server = new ApolloServer({
     schema,
+    context
 });
 
 const port = 3000;

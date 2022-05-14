@@ -1,7 +1,7 @@
 import { extendType, nonNull, objectType, stringArg } from "nexus";
-import { NexusGenObjects } from "../../nexus-typegen";
+import { context } from "../context";
 
-export const Link = objectType({
+export const Strain = objectType({
     name: "Strain",
     definition(t) {
         t.nonNull.int("id"); 
@@ -10,40 +10,26 @@ export const Link = objectType({
     },
 });
 
-let strains: NexusGenObjects["Strain"][]= [
-    {
-        id: 1,
-        name: "Blue Dream",
-        type: "Sativa",
-    },
-    {
-        id: 2,
-        name: "Gorilla Glue",
-        type: "Hybrid",
-    },
-    {
-        id: 3,
-        name: "Blueberry",
-        type: "Indica",
-    }
-];
-
 export const StrainQuery = extendType({
     type: "Query",
     definition(t) {
         t.nonNull.list.nonNull.field("allStrains", {
             type: "Strain",
             resolve() {
-                return strains;
+                return context.prisma.strain.findMany();
             },
         });
         t.nonNull.list.nonNull.field("strainByType", {
             type: "Strain",
             args: {
-                type: stringArg(),
-              },
+                type: nonNull(stringArg()),
+            },
             resolve(parent, args) {
-                return strains.filter(strain => strain.type == args.type);
+                return context.prisma.strain.findMany({
+                    where: {
+                        type: args.type
+                    }
+                })
             },
         });
     },
@@ -59,17 +45,13 @@ export const StrainMutation = extendType({
                 type: nonNull(stringArg()),
             },
             
-            resolve(parent, args, context) {    
-                const { name, type } = args;
-                
-                let idCount = strains.length + 1;
-                const strain = {
-                    id: idCount,
-                    name: name,
-                    type: type,
-                };
-                strains.push(strain);
-                return strain;
+            resolve(parent, args) {
+                return context.prisma.strain.create({
+                    data: {
+                        name: args.name,
+                        type: args.type
+                    }
+                });
             },
         });
     },

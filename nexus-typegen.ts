@@ -4,7 +4,7 @@
  */
 
 
-
+import type { Context } from "./src/context"
 
 
 
@@ -86,7 +86,7 @@ export interface NexusGenArgTypes {
   }
   Query: {
     strainByType: { // args
-      type?: string | null; // String
+      type: string; // String!
     }
   }
 }
@@ -122,7 +122,7 @@ export type NexusGenFeaturesConfig = {
 }
 
 export interface NexusGenTypes {
-  context: any;
+  context: Context;
   inputTypes: NexusGenInputs;
   rootTypes: NexusGenRootTypes;
   inputTypeShapes: NexusGenInputs & NexusGenEnums & NexusGenScalars;
