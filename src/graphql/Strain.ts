@@ -1,5 +1,4 @@
 import { extendType, nonNull, objectType, stringArg } from "nexus";
-import { context } from "../context";
 
 export const Strain = objectType({
     name: "Strain",
